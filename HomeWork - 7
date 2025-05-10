@@ -1,0 +1,35 @@
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.interpolate import splprep, splev
+
+# Define control points
+control_points = np.array([
+    [0, 0],
+    [1, 2],
+    [2, 0],
+    [3, 2],
+    [4, 0]
+])
+
+# Separate x and y
+x = control_points[:, 0]
+y = control_points[:, 1]
+
+# Create B-spline representation (cubic, smoothing s=0 means interpolation through knots)
+tck, u = splprep([x, y], k=3, s=0)
+
+# Generate new points on the spline
+u_fine = np.linspace(0, 1, 400)
+x_spline, y_spline = splev(u_fine, tck)
+
+# Plot the results
+plt.figure(figsize=(8, 6))
+plt.plot(x_spline, y_spline, 'b-', label='Cubic B-spline Curve')
+plt.plot(x, y, 'ro--', label='Control Points')
+plt.title('Cubic B-spline Curve')
+plt.xlabel('X-axis')
+plt.ylabel('Y-axis')
+plt.grid(True)
+plt.legend()
+plt.axis('equal')
+plt.show()
